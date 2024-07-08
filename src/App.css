@@ -1,0 +1,179 @@
+:root {
+  margin: auto;
+  background-color: black;
+  color: white;
+  text-align: center;
+  width: 100%;
+  font-family: "Poppins", sans-serif;
+  padding: 0;
+}
+.title{
+  font-size: 4rem;
+  color:#26BEDC;
+}
+.rules{
+  font-size: 1.5rem;
+  color: #74D88E;
+}
+button{
+  margin:auto;
+  font-size:15px;
+  background-color: #E26CB5;
+  border:none;
+  border-radius: 6px;
+  padding: 2px 5px;
+  color: #3d3c3c;
+  cursor: pointer;
+}
+button:hover{
+  background-color:#DFE47A;
+  color: #E26CB5;
+}
+
+.game-board{
+  position: relative;
+  display: grid;
+  box-sizing: border-box;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);  
+  gap: 0.5rem .75rem;
+  padding: 50px 0 0 0;
+  width:70%;
+  margin:auto;
+  
+  justify-content: space-evenly;
+}
+.modal{
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  top: 50%;
+  left: 50%;
+  background-color: #11cfb9;
+  height:500px;
+  width: 500px;
+  border: 2px solid #DFE47A;
+  border-radius: 6px;
+  padding: 50px;
+  transform: translate(-50%, -50%);
+}
+.winner-message{
+  margin: auto;
+  padding: 3rem;
+  font-size: 2rem;
+  line-height: 3.5rem;
+  text-shadow: 0.5px 0.5px 0.5px rgb(41, 41, 41);
+  text-align: center;
+  color:#3d3c3c;
+  
+}
+.card{
+  position: relative;
+  padding:0;  
+}
+.card img{
+  width: 100%;
+  display: block;
+  border: 2px solid white;
+  border-radius: 6px;  
+}
+
+.card .front{
+  transform: rotateY(90deg);
+  transition: all ease-in 0.2s;
+  position: absolute;
+}
+.flipped .front{
+  transform: rotateY(0deg);
+  transition-delay: 0.2s;
+}
+.card .back{
+  transition: all ease-in 0.2s;
+  transition-delay: 0.2s;
+}
+.flipped .back{
+  transform: rotateY(90deg);
+  transition-delay: 0s;
+}
+.turns{
+  font-size: 20px;
+  padding-top: 50px;
+}
+
+/* ipad */
+@media (max-width: 820px) {
+  .title{
+    font-size: 3rem;
+  }
+
+  .rules{
+    font-size: 1.25rem;
+  }
+
+  .modal{
+    height: 400px;
+    width: 400px;
+    padding: 40px;
+  }
+
+  .winner-message{
+    padding: 2rem;
+    font-size: 2rem;
+    line-height: 3.25rem;
+  }
+
+  .game-board{
+    width: 100%;
+    gap: .5rem .25rem;
+  }
+  .card img{
+    width:95%;    
+  }
+  button{
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+
+  .turns{
+    font-size: 18px;
+    padding-top: 40px;
+  }
+}
+
+/* iphone */
+@media (max-width: 480px) {
+  .title{
+    font-size: 2.50rem;
+  }
+
+  .rules{
+    font-size: 1rem;
+  }
+
+  .modal{
+    height: 300px;
+    width: 300px;
+    padding: 30px;
+  }
+
+  .winner-message{
+    padding: 1rem;
+    font-size: 1.35rem;
+    line-height: 2.75rem;
+  }
+
+  .game-board{
+    width: 100%;   
+    grid-gap: 4px 4px;
+  }
+
+  button{
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+
+  .turns{
+    font-size: 16px;
+    padding-top: 30px;
+  }
+}

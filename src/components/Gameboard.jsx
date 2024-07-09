@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react"
 import CardItem from "./CardItem"
-import { ImageList } from "../helpers/ImageList"
 import WinnerModal from "./WinnerModal"
-
+import VITE_CAT_API_KEY from '/.env'
 
 function Gameboard( ){
   const [ cards, setCards ] = useState([])
@@ -13,29 +12,58 @@ function Gameboard( ){
   const [ matchedCount, setMatchedCount ] = useState(0)
   const [ open, setOpen ] = useState(false)
 
-  const handleClose = () => {
-    setOpen(false)
-    shuffleCards()
+  const fetchCats = async() =>{
+    try {
+      const response = await fetch('https://api.thecatapi.com/v1/images/search?limit=8',{
+        method: 'GET',
+        headers: {
+          'x-api-key': VITE_CAT_API_KEY
+        }
+      })
+
+      if(!response.ok){
+        throw new Error('Network response not okay')
+      }
+
+      const data = await response.json()
+      const imageList = data.map(item => ({ 
+        name: item.id,
+        url: item.url,
+        matched: false        
+      }))
+
+      const duplicatedImageList = await imageList.flatMap(item => [
+        {...item, key:`${item.name}-1`},
+        {...item, key: `${item.name}-2`}
+      ])
+      
+      console.log('duplicatedImage', duplicatedImageList)
+
+      return duplicatedImageList
+    }
+    catch (error) {
+      console.error('Problem with fetch operation', error)
+      return []
+    }
   }
+ 
+  const shuffleCards = async() => {
 
-  const shuffleCards = () => {
-    const shuffledCards = [...ImageList, ...ImageList]
-      .sort(()=> Math.random() - 0.5)
-      .map((card) => ({ ...card, id: Math.random()}))
-
+    const imageList = await fetchCats()
+    
+    const shuffledCards = imageList.sort(()=> Math.random() - 0.5)
     setCard1(null)
     setCard2(null)
     setTurns(0)   
     setCards(shuffledCards)
     setMatchedCount(0)
     setOpen(false)
-    console.log(cards)
   }
 
-    //auto start
-    useEffect(() => {
-      shuffleCards()
-    }, []) 
+  const handleClose = () => {
+    setOpen(false)
+    shuffleCards()
+  }
 
   const handleFlip = (card) => {
     if(!disabled){
@@ -43,7 +71,12 @@ function Gameboard( ){
     }      
   }
 
-//compare cards
+  //auto start
+  useEffect(() => {
+    shuffleCards()      
+  }, [])   
+
+  //compare cards
   useEffect(() =>{
     
     if(card1 && card2){
@@ -71,7 +104,7 @@ function Gameboard( ){
 
   //when all cards match, display winner page
   useEffect(() =>{
-    console.log("matched count", matchedCount)
+    // console.log("matched count", matchedCount)
     if (matchedCount === 8){      
       setTimeout(() => setOpen(true), 1250)
     }
@@ -86,15 +119,12 @@ function Gameboard( ){
     
   }
 
-
-
-
   return(
     <> 
       <div className='game-board'>
         {cards.map((card) => (                  
           <CardItem 
-            key={card.id}
+            key={card.key}
             card={card} 
             flipCard={()=>handleFlip(card)}
             flipped={card === card1 || card === card2 || card.matched}

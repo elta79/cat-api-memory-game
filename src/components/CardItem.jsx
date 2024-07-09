@@ -15,7 +15,7 @@ function CardItem({ card, flipCard, flipped, disabled }){
         <div className={flipped ? "flipped": ""}>
           <img 
             className='front' 
-            src={card.image} 
+            src={card.url} 
             alt='card front'
           />
           <img 

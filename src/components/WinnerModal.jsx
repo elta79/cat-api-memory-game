@@ -2,9 +2,10 @@ function WinnerModal({ handleClose }){
 
   return(
     <>
-      <div className='modal'>        
-        <button onClick={() => handleClose()}>X</button>
-        <p className='winner-message'>If you’re feeling tense, I’ve got a <span style={{color:'#FD5D64'}}>message</span> for you, change out a vowel and there’s relief in the clue.</p>        
+      <div className='modal'>
+        <p className='winner-message'>Congratulations!</p> 
+        <p className='winner-message'>You matched all of the cards. You have an incredible memory.</p>
+        <button onClick={() => handleClose()}>Play Again</button>
       </div>
     </>  
 

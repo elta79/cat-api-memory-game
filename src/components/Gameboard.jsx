@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import CardItem from "./CardItem"
 import WinnerModal from "./WinnerModal"
-import VITE_CAT_API_KEY from '/.env'
 
 function Gameboard( ){
   const [ cards, setCards ] = useState([])
@@ -12,12 +11,14 @@ function Gameboard( ){
   const [ matchedCount, setMatchedCount ] = useState(0)
   const [ open, setOpen ] = useState(false)
 
+  const apiUrl = import.meta.env.VITE_CAT_API_KEY
+
   const fetchCats = async() =>{
     try {
       const response = await fetch('https://api.thecatapi.com/v1/images/search?limit=8',{
         method: 'GET',
         headers: {
-          'x-api-key': VITE_CAT_API_KEY
+          'x-api-key': apiUrl
         }
       })
 

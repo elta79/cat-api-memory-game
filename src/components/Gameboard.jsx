@@ -27,43 +27,63 @@ function Gameboard( ){
       }
 
       const data = await response.json()
-      const imageList = data.map(item => ({ 
-        name: item.id,
         url: item.url,
-        matched: false        
-      }))
-
-      const duplicatedImageList = imageList.flatMap(item => [
-        {...item, key:`${item.name}-1`},
-        {...item, key: `${item.name}-2`}
-      ])
-      
       console.log('duplicatedImage', duplicatedImageList)
 
-      return duplicatedImageList
+      console.log('data', data)
+      return data
     }
     catch (error) {
       console.error('Problem with fetch operation', error)
       return []
     }
-  }
- 
-  const shuffleCards = async() => {
 
-    const imageList = await fetchCats()
+}
+
+  //duplicates data and adds unique id
+  const duplicateData = (data) =>{
     
-    const shuffledCards = imageList.sort(()=> Math.random() - 0.5)
-    setCard1(null)
-    setCard2(null)
-    setTurns(0)   
-    setCards(shuffledCards)
-    setMatchedCount(0)
-    setOpen(false)
+    const dataList = [...data, ...data].map(item =>({
+      id: Math.random(),
+      name: item.id,
+      url: item.url,
+      matched: false
+    }))
+    return dataList
   }
 
-  const handleClose = () => {
-    setOpen(false)
-    shuffleCards()
+  //shuffles dataList
+  const shuffleData = (dataList) => {
+    const shuffledData = [...dataList] //creates copy of dataList
+    
+    for (let i = shuffledData.length - 1; i >= 0; i--){
+      const j = Math.floor(Math.random() * (i+1))
+      if (i <shuffledData.length && j < shuffledData.length){
+        [shuffledData[i], shuffledData[j]] = [shuffledData[j], shuffledData[i]]
+      }else{
+        console.warn(`Invalid indices i=${i}, j=${j}`)
+      }            
+    }     
+    return shuffledData
+  }
+
+  const initializeGame = async() =>{
+    try{
+      const data = await fetchCats()
+      const dataList = duplicateData(data)
+      const shuffledData = shuffleData(dataList)
+      
+  
+      setCard1(null)
+      setCard2(null)
+      setTurns(0)   
+      setCards(shuffledData)
+      setMatchedCount(0)
+      setOpen(false)
+    } catch (error){
+      console.log('Error initializing game: ', error)
+    }
+    
   }
 
   const handleFlip = (card) => {
@@ -72,10 +92,15 @@ function Gameboard( ){
     }      
   }
 
+  const handleClose = () => {
+    setOpen(false)
+    initializeGame()
+  }
+
   //auto start
   useEffect(() => {
-    shuffleCards()      
-  }, [])   
+    initializeGame()      
+  }, []) 
 
   //compare cards
   useEffect(() =>{
@@ -95,7 +120,7 @@ function Gameboard( ){
           })
         })  
         setMatchedCount(prevMatchedCount => prevMatchedCount + 1)
-        // console.log('matched count: ', matchedCount)           
+          
         resetTurn()
       }else{        
         setTimeout(() => resetTurn(), 1000)
@@ -105,7 +130,7 @@ function Gameboard( ){
 
   //when all cards match, display winner page
   useEffect(() =>{
-    // console.log("matched count", matchedCount)
+
     if (matchedCount === 8){      
       setTimeout(() => setOpen(true), 1250)
     }
@@ -125,7 +150,7 @@ function Gameboard( ){
       <div className='game-board'>
         {cards.map((card) => (                  
           <CardItem 
-            key={card.key}
+            key={card.id}
             card={card} 
             flipCard={()=>handleFlip(card)}
             flipped={card === card1 || card === card2 || card.matched}

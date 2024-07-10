@@ -13,6 +13,7 @@ function Gameboard( ){
 
   const apiUrl = import.meta.env.VITE_CAT_API_KEY
 
+  //fetch data, returns data
   const fetchCats = async() =>{
     try {
       const response = await fetch('https://api.thecatapi.com/v1/images/search?limit=8',{
@@ -26,11 +27,7 @@ function Gameboard( ){
         throw new Error('Network response not okay')
       }
 
-      const data = await response.json()
-        url: item.url,
-      console.log('duplicatedImage', duplicatedImageList)
-
-      console.log('data', data)
+      const data = await response.json()      
       return data
     }
     catch (error) {

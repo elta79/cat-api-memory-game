@@ -33,7 +33,7 @@ function Gameboard( ){
         matched: false        
       }))
 
-      const duplicatedImageList = await imageList.flatMap(item => [
+      const duplicatedImageList = imageList.flatMap(item => [
         {...item, key:`${item.name}-1`},
         {...item, key: `${item.name}-2`}
       ])
